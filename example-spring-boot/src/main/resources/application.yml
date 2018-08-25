@@ -1,0 +1,4 @@
+portto:
+  serversList:
+    - "teset1:1212"
+    - "teset2:1212"

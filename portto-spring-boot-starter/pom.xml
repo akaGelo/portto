@@ -3,10 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>portto-client</artifactId>
+    <groupId>ru.vyukov.portto</groupId>
+    <artifactId>portto-spring-boot-starter</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>portto-client</name>
+    <name>portto-spring-boot-starter</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>
@@ -16,30 +18,29 @@
     </parent>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+
     </properties>
 
     <dependencies>
-
-
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>ru.vyukov.portto</groupId>
+            <artifactId>portto-client</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.1.53</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
     </dependencies>
 
     <build>
-
     </build>
 
 

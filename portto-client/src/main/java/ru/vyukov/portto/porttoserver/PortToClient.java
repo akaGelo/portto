@@ -1,12 +1,15 @@
 package ru.vyukov.portto.porttoserver;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+public interface PortToClient {
 
-@SpringBootApplication
-public class PorttoServerApplication {
+    void startForwarding(int port);
 
-    public static void main(String[] args) {
-        SpringApplication.run(PorttoServerApplication.class, args);
-    }
+    void stopForwardingAll();
+
+    int getRemotePort();
+
+    String getRemoteHost();
+
+    String getRemoteAddress();
+
 }

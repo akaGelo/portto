@@ -29,13 +29,12 @@
     <modules>
         <module>portto-server</module>
         <module>portto-client</module>
+        <module>portto-spring-boot-starter</module>
+        <module>example-spring-boot</module>
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -52,6 +51,21 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>ru.vyukov.portto</groupId>
+                <artifactId>portto-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.vyukov.portto</groupId>
+                <artifactId>portto-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
