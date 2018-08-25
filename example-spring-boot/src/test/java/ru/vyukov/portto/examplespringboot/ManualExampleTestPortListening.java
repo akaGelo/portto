@@ -4,19 +4,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 import ru.vyukov.portto.springboot.PortTo;
 import ru.vyukov.portto.springboot.annotations.PortToRemoteAddress;
 import ru.vyukov.portto.springboot.annotations.PortToRemotePort;
 
-import static org.assertj.core.api.Java6Assertions.fail;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @PortTo
-@ActiveProfiles("manual-test")
-public class ManualWebDriverExampleTestPortListening {
+public class ManualExampleTestPortListening {
 
     /**
      * eq @Value("${portto.remote.address}")
@@ -30,10 +28,17 @@ public class ManualWebDriverExampleTestPortListening {
     @PortToRemotePort
     private int portoToExternalPort;
 
+    @PortToRemoteAddress
+    private String remoteAddress;
+
 
     @Test
-    public void contextLoads() {
-        fail("");
+    public void openInBrowser() {
+
+        String url = "http://" + remoteAddress;
+        RestOperations likeBrowserInSeleniumGrid = new RestTemplate();
+//TODO likeBrowserInSeleniumGrid.getRequest()
+
     }
 
 }

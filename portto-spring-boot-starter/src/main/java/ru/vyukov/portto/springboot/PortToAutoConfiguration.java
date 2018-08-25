@@ -2,6 +2,7 @@ package ru.vyukov.portto.springboot;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -10,6 +11,8 @@ import org.springframework.core.env.MutablePropertySources;
 import ru.vyukov.portto.porttoserver.PortToClient;
 import ru.vyukov.portto.porttoserver.PortToClientConfig;
 import ru.vyukov.portto.porttoserver.PortToClientImpl;
+import ru.vyukov.portto.springboot.converters.InetSocketAddressToStringConverter;
+import ru.vyukov.portto.springboot.converters.StringToInetSocketAddressConverter;
 
 /**
  * @author Oleg Vyukov
@@ -49,5 +52,16 @@ public class PortToAutoConfiguration {
         return portToPropertySource;
     }
 
+    @Bean
+    @ConfigurationPropertiesBinding
+    public StringToInetSocketAddressConverter stringToInetSocketAddressConverter() {
+        return new StringToInetSocketAddressConverter();
+    }
+
+    @Bean
+    @ConfigurationPropertiesBinding
+    InetSocketAddressToStringConverter inetSocketAddressToStringConverter(){
+        return new InetSocketAddressToStringConverter();
+    }
 
 }
