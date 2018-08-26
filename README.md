@@ -1,5 +1,6 @@
-###
-WARNING!!! Not implemented. Status: in progress
+#### WARNING!!! Not implemented. Status: in progress
+
+[![Build Status](https://travis-ci.org/akaGelo/portto.svg?branch=master)](https://travis-ci.org/akaGelo/portto)
 
 ## About 
 **PortTo** - tools for the exposing localhost port to a developer office network or internet.
@@ -27,3 +28,6 @@ forwardhq.com - paid service.
 
 The client library opens **ssh tunnel** to **PortTo Server** and uses "remote port forwarding".
 WebBrowser sends requests to \<portToServer:forwardingPort\>. PortTo Server forwards requests to the client localhost interface from the open tunnel.   
+
+
+## Security

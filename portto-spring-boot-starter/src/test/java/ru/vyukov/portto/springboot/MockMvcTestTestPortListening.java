@@ -1,20 +1,19 @@
-package ru.vyukov.portto.examplespringboot;
+package ru.vyukov.portto.springboot;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
-import ru.vyukov.portto.springboot.PortTo;
 import ru.vyukov.portto.springboot.annotations.PortToRemoteAddress;
 import ru.vyukov.portto.springboot.annotations.PortToRemotePort;
 
+@Ignore
 @PortTo
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ManualExampleTestPortListening {
+@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
+public class MockMvcTestTestPortListening {
 
     /**
      * eq @Value("${portto.remote.address}")
@@ -36,7 +35,7 @@ public class ManualExampleTestPortListening {
     public void openInBrowser() {
 
         String url = "http://" + remoteAddress;
-        RestOperations likeBrowserInSeleniumGrid = new RestTemplate();
+
 //TODO likeBrowserInSeleniumGrid.getRequest()
 
     }

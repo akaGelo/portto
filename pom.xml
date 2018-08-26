@@ -54,6 +54,13 @@
 
             <dependency>
                 <groupId>ru.vyukov.portto</groupId>
+                <artifactId>portto-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>ru.vyukov.portto</groupId>
                 <artifactId>portto-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -62,7 +69,6 @@
                 <groupId>ru.vyukov.portto</groupId>
                 <artifactId>portto-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
-                <scope>test</scope>
             </dependency>
 
 

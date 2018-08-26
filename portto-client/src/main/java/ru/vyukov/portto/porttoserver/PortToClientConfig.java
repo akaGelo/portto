@@ -13,4 +13,12 @@ import java.util.List;
 public class PortToClientConfig {
 
     private List<InetSocketAddress> serversList = Arrays.asList(new InetSocketAddress("portto.vyukov.ru", 3222));
+
+    private String userName = "portto";
+
+    private String password = "qwerty";
+
+
+
+
 }

@@ -33,6 +33,17 @@
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.53</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.vyukov.portto</groupId>
+            <artifactId>portto-server</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>2.15.0</version>
             <scope>test</scope>
         </dependency>
 

@@ -2,9 +2,9 @@ package ru.vyukov.portto.porttoserver;
 
 public interface PortToClient {
 
-    void startForwarding(int port);
+    void startForwarding(int port) throws PortToClientException;
 
-    void stopForwardingAll();
+    void stopForwardingAll() throws PortToClientException;
 
     int getRemotePort();
 
@@ -13,3 +13,5 @@ public interface PortToClient {
     String getRemoteAddress();
 
 }
+
+
