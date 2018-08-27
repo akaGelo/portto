@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class ServerConfig {
 
     private int listenPort = 2222;
+
     private String listenInterface = "0.0.0.0";
 
 

@@ -1,0 +1,63 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "portto-server.fullname" . }}
+  labels:
+    app: {{ template "portto-server.name" . }}
+    chart: {{ template "portto-server.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "portto-server.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "portto-server.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.image.imagePullSecret }}
+      serviceAccountName: {{ template "portto-server.name" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: sshd
+              containerPort: {{ .Values.sshd.port }}
+              protocol: TCP
+            {{range $i, $e := untilStep (.Values.sshd.forwarding.startPort | int) (.Values.sshd.forwarding.endPort | int)  1 }}
+            - name: f-{{ $e }}
+              containerPort: {{ $e }}
+              protocol: TCP
+            {{end}}
+          env:
+            - name: SPRING_APPLICATION_NAME
+              value: {{ template "portto-server.name" . }}
+
+          livenessProbe:
+            tcpSocket:
+              port: sshd
+            initialDelaySeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: sshd
+            initialDelaySeconds: 10
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

@@ -1,0 +1,39 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app: {{ template "portto-server.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ template "portto-server.name" . }}-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "portto-server.name" . }}
+    namespace: {{ .Release.Namespace }}
+
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app: {{ template "portto-server.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: {{ template "portto-server.name" . }}-{{ template "portto-server.name" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name:  {{ template "portto-server.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "portto-server.name" . }}
+    namespace: {{ .Release.Namespace }}
+

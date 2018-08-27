@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "portto-server.name" . }}
+  labels:
+    app: {{ template "portto-server.name" . }}
+    chart: {{ template "portto-server.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.sshd.port }}
+      targetPort: sshd
+      protocol: TCP
+      name: sshd
+    {{range $i, $e := untilStep (.Values.sshd.forwarding.startPort | int) (.Values.sshd.forwarding.endPort | int)  1 }}
+    - port: {{ $e }}
+      targetPort: {{ $e }}
+      protocol: TCP
+      name: f-{{ $e }}
+    {{end}}
+  selector:
+    app: {{ template "portto-server.name" . }}
+    release: {{ .Release.Name }}

@@ -31,3 +31,12 @@ WebBrowser sends requests to \<portToServer:forwardingPort\>. PortTo Server forw
 
 
 ## Security
+
+
+
+## Install server
+### Helm  
+```bash
+helm --kube-context=office  upgrade --install  portto  portto-server/src/main/helm/  --set=image.tag=build0 --set=image.pullPolicy=Always
+
+```
