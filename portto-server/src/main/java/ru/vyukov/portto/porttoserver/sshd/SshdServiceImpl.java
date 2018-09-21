@@ -2,17 +2,17 @@ package ru.vyukov.portto.porttoserver.sshd;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.sshd.common.forward.ForwardingFilterFactory;
 import org.apache.sshd.common.io.IoServiceFactoryFactory;
+import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.server.ServerBuilder;
 import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.config.keys.AuthorizedKeysAuthenticator;
 import org.apache.sshd.server.forward.AcceptAllForwardingFilter;
-import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.session.SessionFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import ru.vyukov.portto.porttoserver.config.ServerConfig;
+import ru.vyukov.portto.porttoserver.ServerConfig;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -26,7 +26,8 @@ import java.io.IOException;
 public class SshdServiceImpl implements SshdService {
 
     private final ServerConfig config;
-    private final ForwardingFilterFactory forwarderFactory;
+//    private final ForwardingFilterFactory forwarderFactory;
+    private final IoServiceFactoryFactory ioServiceFactory;
 
 
     private SshServer sshd;
@@ -40,28 +41,27 @@ public class SshdServiceImpl implements SshdService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void startSshd() throws IOException {
-        sshd = ServerBuilder.builder()
-                .build();
+        sshd = ServerBuilder.builder().build();
         sshd.setPort(config.getListenPort());
         sshd.setHost(config.getListenInterface());
 
-
-        if (config.isAllowAnyPassword()) {
-            sshd.setPasswordAuthenticator((username, password, session) -> true);
-        }
-
-        IoServiceFactoryFactory ioServiceFactory = new CustomMinaDefaultIoServiceFactoryFactory();
 
         sshd.setIoServiceFactoryFactory(ioServiceFactory);
 
         sshd.setSessionFactory(new SessionFactory(sshd));
 
-        sshd.setForwarderFactory(forwarderFactory);
-
         sshd.setForwardingFilter(AcceptAllForwardingFilter.INSTANCE);
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
+        sshd.setKeyPairProvider(new ClassLoadableResourceKeyPairProvider("server_key_pair.pem"));
 
-        sshd.setPublickeyAuthenticator((username, key, session) -> true);
+
+        if (config.isAllowAnyPassword()) {
+            sshd.setPublickeyAuthenticator((username, key, session) -> true);
+            sshd.setPasswordAuthenticator((username, password, session) -> true);
+            log.info(">>>> SSHd allow anonymous connections");
+        } else {
+            sshd.setPublickeyAuthenticator(new AuthorizedKeysAuthenticator(config.getAuthorizedKeysPath()));
+            log.info(">>>> SSHd AuthorizedKeys authorization");
+        }
 
         sshd.start();
     }

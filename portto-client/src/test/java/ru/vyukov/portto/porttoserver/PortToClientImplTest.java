@@ -6,7 +6,6 @@ import org.junit.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.SocketUtils;
-import ru.vyukov.portto.porttoserver.config.ServerConfig;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
