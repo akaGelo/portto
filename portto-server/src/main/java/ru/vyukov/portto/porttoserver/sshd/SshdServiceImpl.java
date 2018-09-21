@@ -26,7 +26,6 @@ import java.io.IOException;
 public class SshdServiceImpl implements SshdService {
 
     private final ServerConfig config;
-//    private final ForwardingFilterFactory forwarderFactory;
     private final IoServiceFactoryFactory ioServiceFactory;
 
 
@@ -36,6 +35,7 @@ public class SshdServiceImpl implements SshdService {
     @PostConstruct
     public void init() {
         log.info(">>>> SSHd listen {}:{}", config.getListenInterface(), config.getListenPort());
+        log.info(">>>> Forwarding range {}-{}", config.getForwarding().getStartPort(), config.getForwarding().getEndPort());
     }
 
 

@@ -30,11 +30,11 @@ spec:
             - name: sshd
               containerPort: {{ .Values.sshd.port }}
               protocol: TCP
-#            {{range $i, $e := untilStep (.Values.sshd.forwarding.startPort | int) (.Values.sshd.forwarding.endPort | int)  1 }}
-#            - name: f-{{ $e }}
-#              containerPort: {{ $e }}
-#              protocol: TCP
-#            {{end}}
+            {{range $i, $e := untilStep (.Values.sshd.forwarding.startPort | int) (.Values.sshd.forwarding.endPort | int)  1 }}
+            - name: f-{{ $e }}
+              containerPort: {{ $e }}
+              protocol: TCP
+            {{end}}
           env:
             - name: SPRING_APPLICATION_NAME
               value: {{ template "portto-server.name" . }}

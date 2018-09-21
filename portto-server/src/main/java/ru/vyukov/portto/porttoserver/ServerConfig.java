@@ -57,15 +57,18 @@ public class ServerConfig {
             throw new IllegalStateException("AuthorizedKeys not configured");
         }
 
-        synchronized (this) {
-            try {
-                Path authorizedKeysTmp = Files.createTempFile("authorized_keys", "");
-                Files.write(authorizedKeysTmp, authorizedKeys.getBytes());
-                this.authorizedKeysPath = authorizedKeysTmp.toAbsolutePath().toString();
-                return authorizedKeysTmp;
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
+        return writeAuthorizedKeys();
+    }
+
+
+    synchronized private Path writeAuthorizedKeys() {
+        try {
+            Path authorizedKeysTmp = Files.createTempFile("authorized_keys", "");
+            Files.write(authorizedKeysTmp, authorizedKeys.getBytes());
+            this.authorizedKeysPath = authorizedKeysTmp.toAbsolutePath().toString();
+            return authorizedKeysTmp;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

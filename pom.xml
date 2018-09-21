@@ -27,6 +27,9 @@
         <build.number>0</build.number>
 
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
+
+        <spring-cloud-kubernetes.version>0.3.0.RELEASE</spring-cloud-kubernetes.version>
+        <spring-cloud-kubernetes.netflix.version>0.2.0.RELEASE</spring-cloud-kubernetes.netflix.version>
     </properties>
 
     <modules>
@@ -59,6 +62,16 @@
         </snapshotRepository>
     </distributionManagement>
 
+
+    <repositories>
+
+        <repository>
+            <id>repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>http://repo.spring.io/milestone</url>
+        </repository>
+
+    </repositories>
 
     <dependencyManagement>
         <dependencies>

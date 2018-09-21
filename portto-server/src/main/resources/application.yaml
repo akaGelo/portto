@@ -4,3 +4,12 @@ sshd:
   forwarding:
     start-port: 31000
     end-port:   32000
+
+
+spring:
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+      reload:
+        enabled: false

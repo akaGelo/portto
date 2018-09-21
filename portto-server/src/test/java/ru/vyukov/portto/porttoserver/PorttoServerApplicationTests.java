@@ -18,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "sshd.listen-port:32223")
 @AutoConfigureWireMock(port = 0)
 public class PorttoServerApplicationTests {
 

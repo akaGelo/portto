@@ -15,13 +15,13 @@ spec:
       nodePort: {{ .Values.sshd.port }}
       protocol: TCP
       name: sshd
-#    {{range $i, $e := untilStep (.Values.sshd.forwarding.startPort | int) (.Values.sshd.forwarding.endPort | int)  1 }}
-#    - port: {{ $e }}
-#      targetPort: {{ $e }}
-#      nodePort: {{ $e }}
-#      protocol: TCP
-#      name: f-{{ $e }}
-#    {{end}}
+    {{range $i, $e := untilStep (.Values.sshd.forwarding.startPort | int) (.Values.sshd.forwarding.endPort | int)  1 }}
+    - port: {{ $e }}
+      targetPort: {{ $e }}
+      nodePort: {{ $e }}
+      protocol: TCP
+      name: f-{{ $e }}
+    {{end}}
   selector:
     app: {{ template "portto-server.name" . }}
     release: {{ .Release.Name }}

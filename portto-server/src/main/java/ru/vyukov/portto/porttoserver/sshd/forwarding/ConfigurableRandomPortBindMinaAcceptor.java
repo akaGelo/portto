@@ -1,4 +1,4 @@
-package ru.vyukov.portto.porttoserver.sshd;
+package ru.vyukov.portto.porttoserver.sshd.forwarding;
 
 import org.apache.mina.core.service.IoProcessor;
 import org.apache.mina.transport.socket.nio.NioSession;

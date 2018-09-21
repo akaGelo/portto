@@ -1,4 +1,4 @@
-package ru.vyukov.portto.porttoserver.sshd;
+package ru.vyukov.portto.porttoserver.sshd.forwarding;
 
 import org.apache.sshd.common.FactoryManager;
 import org.apache.sshd.common.io.IoServiceFactory;
