@@ -1,6 +1,8 @@
 package ru.vyukov.portto.porttoserver;
 
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,18 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.vyukov.portto.porttoserver.ports.PortsRegistry;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static ru.vyukov.portto.porttoserver.PorttoServerApplicationTests.createSession;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties =
         {
-                "sshd.listen-port=32229",
-                "sshd.forwarding.min-port=80",
-                "sshd.forwarding.max-port=80"
+                "sshd.listen-port=32227",
+                "sshd.forwarding.min-port=32227",
+                "sshd.forwarding.max-port=32228"
         })
-public class MaxConnectionsTest {
+public class NoPortTest {
 
 
     @Autowired
@@ -29,20 +30,41 @@ public class MaxConnectionsTest {
     @Autowired
     private PortsRegistry portsRegistry;
 
+
+    private Session session;
+
+
     @Before
     public void setUp() throws Exception {
         assertTrue(serverConfig.isAllowAnyPassword());
-        assertEquals(0, portsRegistry.getFreePorts());
+        assertEquals(1, portsRegistry.getFreePorts());
+
+        session = createSession(serverConfig);
     }
 
+
+    @After
+    public void tearDown() throws Exception {
+        session.disconnect();
+    }
 
     /**
      * @throws JSchException        com.jcraft.jsch.JSchException: SSH_MSG_DISCONNECT: 12 Too many concurrent connections (0) - max. allowed: 0
      * @throws InterruptedException
      */
     @Test(expected = JSchException.class)
-    public void testRemotePortForwarding() throws JSchException, InterruptedException {
-        createSession(serverConfig);
+    public void testNoRemotePortForwarding() throws JSchException, InterruptedException {
+        final int onlyOne = 1;
+
+
+        session.setPortForwardingR(0, "localhost", 80);
+        assertEquals(onlyOne, session.getPortForwardingR().length);
+
+        session.setPortForwardingR(0, "localhost", 81);
+        assertEquals(onlyOne, session.getPortForwardingR().length);
+
+        session.setPortForwardingR(0, "localhost", 5432);
+        assertEquals(onlyOne, session.getPortForwardingR().length);
     }
 
 

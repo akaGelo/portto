@@ -32,7 +32,6 @@ public class PorttoServerApplicationTests {
     private RestTemplate restTemplate = new RestTemplate();
 
 
-    private String mockPageUrl;
     private Session session;
 
     @Before
@@ -43,8 +42,6 @@ public class PorttoServerApplicationTests {
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "text/plain")
                         .withBody("mock index page")));
-
-        mockPageUrl = "http://localhost:" + mockHttpPort;
 
         session = createSession(serverConfig);
     }
@@ -64,12 +61,16 @@ public class PorttoServerApplicationTests {
         String[] portForwardingR = session.getPortForwardingR();
         assertFalse(0 == portForwardingR.length);
 
+        int port = parseFirsPort(portForwardingR[0]);
+
+        String mockPageUrl = "http://localhost:" + port;
+
         String responseBody = restTemplate.getForObject(mockPageUrl, String.class);
         assertEquals("mock index page", responseBody);
 
 
         for (String s : portForwardingR) {
-            session.delPortForwardingR(parseFirsPort(s));
+            session.delPortForwardingR(port);
         }
     }
 
