@@ -10,7 +10,7 @@ import org.springframework.util.SocketUtils;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URL;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -42,7 +42,7 @@ public class PortToClientImplTest {
     @Before
     public void setUpTest() throws Exception {
         PortToClientConfig portToClientConfig = new PortToClientConfig();
-        portToClientConfig.setServersList(Arrays.asList(new InetSocketAddress("localhost", serverSshPort)));
+        portToClientConfig.setServersList(Collections.singletonList(new InetSocketAddress("localhost", serverSshPort)));
 
         portToClient = new PortToClientImpl(portToClientConfig);
 

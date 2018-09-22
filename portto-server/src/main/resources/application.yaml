@@ -2,8 +2,9 @@ sshd:
   listen-port: 32222
   listen-interface: 0.0.0.0
   forwarding:
-    start-port: 31000
-    end-port:   32000
+    min-port: 31000
+    max-port:   33000
+  idle-timeout-ms: 60000
 
 
 spring:

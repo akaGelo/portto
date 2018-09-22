@@ -1,0 +1,7 @@
+
+
+ssh -N -R 0:localhost:631 portto-server -p 32222
+
+ssh -N -R 0:localhost:631 localhost -p 32222
+
+-N without shell

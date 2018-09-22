@@ -11,8 +11,8 @@ image:
 sshd:
   port: 32222
   forwarding:
-    startPort: 32223
-    endPort:   32323
+    minPort: 32223
+    maxPort:   32323
 
 
 resources:

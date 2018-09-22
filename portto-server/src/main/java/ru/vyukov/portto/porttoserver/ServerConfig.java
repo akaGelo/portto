@@ -2,11 +2,13 @@ package ru.vyukov.portto.porttoserver;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import java.nio.file.Paths;
 @Component
 @ConfigurationProperties("sshd")
 @Validated
+@ToString(doNotUseGetters = true)
 public class ServerConfig {
 
     @Min(1024)
@@ -32,6 +35,7 @@ public class ServerConfig {
     private String listenInterface;
 
     @NotNull
+    @Valid
     private ForwardingConfig forwarding;
 
 
@@ -41,6 +45,8 @@ public class ServerConfig {
      * Content
      */
     private String authorizedKeys;
+
+    private int idleTimeoutMs = 60_000;
 
 
     public boolean isAllowAnyPassword() {
@@ -81,10 +87,11 @@ public class ServerConfig {
     }
 
     @Data
+    @Validated
     public static class ForwardingConfig {
 
-        private int startPort;
+        private Integer minPort;
 
-        private int endPort;
+        private Integer maxPort;
     }
 }

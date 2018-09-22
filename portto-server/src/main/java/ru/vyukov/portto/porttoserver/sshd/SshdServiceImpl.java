@@ -2,10 +2,11 @@ package ru.vyukov.portto.porttoserver.sshd;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.sshd.common.io.IoServiceFactoryFactory;
+import org.apache.sshd.common.forward.ForwardingFilterFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.server.ServerBuilder;
 import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.command.CommandFactory;
 import org.apache.sshd.server.config.keys.AuthorizedKeysAuthenticator;
 import org.apache.sshd.server.forward.AcceptAllForwardingFilter;
 import org.apache.sshd.server.session.SessionFactory;
@@ -13,6 +14,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import ru.vyukov.portto.porttoserver.ServerConfig;
+import ru.vyukov.portto.porttoserver.ports.PortsRegistry;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -26,7 +28,9 @@ import java.io.IOException;
 public class SshdServiceImpl implements SshdService {
 
     private final ServerConfig config;
-    private final IoServiceFactoryFactory ioServiceFactory;
+    private final PortsRegistry portsRegistry;
+    private final CommandFactory commandFactory;
+    private final ForwardingFilterFactory forwarderFactory;
 
 
     private SshServer sshd;
@@ -35,7 +39,7 @@ public class SshdServiceImpl implements SshdService {
     @PostConstruct
     public void init() {
         log.info(">>>> SSHd listen {}:{}", config.getListenInterface(), config.getListenPort());
-        log.info(">>>> Forwarding range {}-{}", config.getForwarding().getStartPort(), config.getForwarding().getEndPort());
+        log.info(">>>> Forwarding range {}-{}", config.getForwarding().getMinPort(), config.getForwarding().getMaxPort());
     }
 
 
@@ -45,15 +49,30 @@ public class SshdServiceImpl implements SshdService {
         sshd.setPort(config.getListenPort());
         sshd.setHost(config.getListenInterface());
 
+        setProperties(sshd);
 
-        sshd.setIoServiceFactoryFactory(ioServiceFactory);
+        sshd.setCommandFactory(commandFactory);
+
+        sshd.setForwarderFactory(forwarderFactory);
 
         sshd.setSessionFactory(new SessionFactory(sshd));
 
         sshd.setForwardingFilter(AcceptAllForwardingFilter.INSTANCE);
+
         sshd.setKeyPairProvider(new ClassLoadableResourceKeyPairProvider("server_key_pair.pem"));
 
+        authConfig();
 
+        sshd.start();
+    }
+
+
+    private void setProperties(SshServer sshd) {
+        this.sshd.getProperties().put(SshServer.IDLE_TIMEOUT, config.getIdleTimeoutMs());
+        this.sshd.getProperties().put(SshServer.MAX_CONCURRENT_SESSIONS, portsRegistry.getFreePorts());
+    }
+
+    private void authConfig() {
         if (config.isAllowAnyPassword()) {
             sshd.setPublickeyAuthenticator((username, key, session) -> true);
             sshd.setPasswordAuthenticator((username, password, session) -> true);
@@ -62,9 +81,6 @@ public class SshdServiceImpl implements SshdService {
             sshd.setPublickeyAuthenticator(new AuthorizedKeysAuthenticator(config.getAuthorizedKeysPath()));
             log.info(">>>> SSHd AuthorizedKeys authorization");
         }
-
-        sshd.start();
     }
-
 
 }

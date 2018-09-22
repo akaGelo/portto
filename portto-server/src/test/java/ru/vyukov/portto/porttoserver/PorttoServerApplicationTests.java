@@ -18,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "sshd.listen-port:32223")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties = "sshd.listen-port=32223")
 @AutoConfigureWireMock(port = 0)
 public class PorttoServerApplicationTests {
 
@@ -46,7 +46,7 @@ public class PorttoServerApplicationTests {
 
         mockPageUrl = "http://localhost:" + mockHttpPort;
 
-        session = createSession();
+        session = createSession(serverConfig);
     }
 
     @After
@@ -85,7 +85,7 @@ public class PorttoServerApplicationTests {
     }
 
 
-    protected Session createSession() throws JSchException {
+    static Session createSession(ServerConfig serverConfig) throws JSchException {
         JSch sch = new JSch();
         sch.setLogger(new Logger() {
             public boolean isEnabled(int i) {
