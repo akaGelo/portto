@@ -27,10 +27,12 @@ public class PortsRegistryImpl implements PortsRegistry {
     private final ServerConfig serverConfig;
 
     private final BlockingQueue<Integer> ports;
+    private final int totalPorts;
 
     public PortsRegistryImpl(ServerConfig serverConfig) {
         this.serverConfig = serverConfig;
         this.ports = new LinkedBlockingQueue<>(findAllowedPorts());
+        this.totalPorts = ports.size();
     }
 
     private List<Integer> findAllowedPorts() {
@@ -66,6 +68,11 @@ public class PortsRegistryImpl implements PortsRegistry {
     @Override
     public int getFreePorts() {
         return ports.size();
+    }
+
+    @Override
+    public int getTotalPorts() {
+        return totalPorts;
     }
 
     private static boolean isPortAvailable(int port) {

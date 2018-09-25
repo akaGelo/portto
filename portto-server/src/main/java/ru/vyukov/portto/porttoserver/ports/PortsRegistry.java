@@ -7,7 +7,9 @@ public interface PortsRegistry {
 
     int pullRandomPort() throws NoPortException;
 
-    public void retrievePort(int port);
+    void retrievePort(int port);
 
     int getFreePorts();
+
+    int getTotalPorts();
 }

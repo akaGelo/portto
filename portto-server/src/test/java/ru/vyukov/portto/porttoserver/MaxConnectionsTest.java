@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.vyukov.portto.porttoserver.ports.PortsRegistry;
 
@@ -16,10 +17,11 @@ import static ru.vyukov.portto.porttoserver.PorttoServerApplicationTests.createS
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties =
         {
-                "sshd.listen-port=32229",
-                "sshd.forwarding.min-port=80",
-                "sshd.forwarding.max-port=80"
+                "sshd.listen-port=52229",
+                "sshd.forwarding.min-port=52429",
+                "sshd.forwarding.max-port=52429"
         })
+@DirtiesContext
 public class MaxConnectionsTest {
 
 
@@ -32,7 +34,7 @@ public class MaxConnectionsTest {
     @Before
     public void setUp() throws Exception {
         assertTrue(serverConfig.isAllowAnyPassword());
-        assertEquals(0, portsRegistry.getFreePorts());
+        assertEquals(1, portsRegistry.getTotalPorts());
     }
 
 
@@ -41,7 +43,14 @@ public class MaxConnectionsTest {
      * @throws InterruptedException
      */
     @Test(expected = JSchException.class)
-    public void testRemotePortForwarding() throws JSchException, InterruptedException {
+    public void twoSessionExceptionTest() throws JSchException, InterruptedException {
+        createSession(serverConfig);
+
+        createSession(serverConfig);
+    }
+
+    @Test
+    public void oneSessionTest() throws JSchException, InterruptedException {
         createSession(serverConfig);
     }
 

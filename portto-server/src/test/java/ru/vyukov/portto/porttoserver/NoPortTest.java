@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.vyukov.portto.porttoserver.ports.PortsRegistry;
 
@@ -17,10 +18,11 @@ import static ru.vyukov.portto.porttoserver.PorttoServerApplicationTests.createS
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, properties =
         {
-                "sshd.listen-port=32227",
-                "sshd.forwarding.min-port=32227",
-                "sshd.forwarding.max-port=32228"
+                "sshd.listen-port=62227",
+                "sshd.forwarding.min-port=62228",
+                "sshd.forwarding.max-port=62229"
         })
+@DirtiesContext
 public class NoPortTest {
 
 
@@ -34,10 +36,11 @@ public class NoPortTest {
     private Session session;
 
 
+
     @Before
     public void setUp() throws Exception {
         assertTrue(serverConfig.isAllowAnyPassword());
-        assertEquals(1, portsRegistry.getFreePorts());
+        assertEquals(2, portsRegistry.getTotalPorts());
 
         session = createSession(serverConfig);
     }
@@ -45,7 +48,9 @@ public class NoPortTest {
 
     @After
     public void tearDown() throws Exception {
-        session.disconnect();
+        if (null != session) {
+            session.disconnect();
+        }
     }
 
     /**
@@ -53,19 +58,28 @@ public class NoPortTest {
      * @throws InterruptedException
      */
     @Test(expected = JSchException.class)
-    public void testNoRemotePortForwarding() throws JSchException, InterruptedException {
-        final int onlyOne = 1;
+    public void testNoPortRemotePortForwarding() throws JSchException, InterruptedException {
+        final int twoPortsAvailable = 2;
 
 
         session.setPortForwardingR(0, "localhost", 80);
-        assertEquals(onlyOne, session.getPortForwardingR().length);
+        assertEquals(1, session.getPortForwardingR().length);
 
         session.setPortForwardingR(0, "localhost", 81);
-        assertEquals(onlyOne, session.getPortForwardingR().length);
+        assertEquals(twoPortsAvailable, session.getPortForwardingR().length);
 
         session.setPortForwardingR(0, "localhost", 5432);
-        assertEquals(onlyOne, session.getPortForwardingR().length);
+        assertEquals(twoPortsAvailable, session.getPortForwardingR().length);
     }
 
+
+    @Test
+    public void testParallelSessions() throws JSchException, InterruptedException {
+        Session secondSessions = createSession(serverConfig);
+        assertTrue(secondSessions.isConnected());
+
+
+        assertTrue(session.isConnected());
+    }
 
 }
