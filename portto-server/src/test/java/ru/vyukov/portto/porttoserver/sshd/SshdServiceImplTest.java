@@ -6,6 +6,7 @@ import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.command.CommandFactory;
 import org.apache.sshd.server.config.keys.AuthorizedKeysAuthenticator;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -29,6 +30,7 @@ public class SshdServiceImplTest {
 
     @Spy
     private ServerConfig serverConfig = new ServerConfig();
+
     @Mock
     private PortsRegistry portsRegistry;
     @Mock
@@ -48,6 +50,10 @@ public class SshdServiceImplTest {
     @InjectMocks
     private SshdServiceImpl underTest;
 
+    @Before
+    public void setUp() throws Exception {
+        serverConfig.setForwarding(new ServerConfig.ForwardingConfig());
+    }
 
     @Test
     public void authKeysConfigTest() throws IOException {

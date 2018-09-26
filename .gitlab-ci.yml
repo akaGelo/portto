@@ -1,0 +1,48 @@
+variables:
+  SPRING_PROFILES_INCLUDE: gitlab-ci
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode  -Dbuild.number=$CI_PIPELINE_ID"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+services:
+  - docker:dind
+
+before_script:
+  - export DOCKER_CONTAINER_IP=$(ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
+  - "[ -f /usr/bin/docker ] && docker login -u $MYSEC_DOCKER_LOGIN -p $MYSEC_DOCKER_PASSWORD"
+  - mkdir -p .m2
+  - echo "$MYSEC_M2_SETTINGS_XML" > .m2/settings.xml
+  - mkdir ~/.kube/
+  - echo "$MYSEC_KUBECONF" > ~/.kube/config
+    #unset all MYSEC** vars
+  - echo secure vars && env | grep -Eo '^MYSEC[^=]+'
+  - unset $(env | grep -Eo '^MYSEC[^=]+' | xargs)
+
+stages:
+  - build
+  - integration-test
+  - staging-deploy
+
+
+maven-build:
+  image: twalter/maven-docker
+  stage: build
+  script:
+    - echo $DOCKER_CONTAINER_IP
+    - mvn $MAVEN_CLI_OPTS clean deploy
+  cache:
+    paths:
+      - .m2/repository/
+
+
+
+helm-deploy-admin-service: &staging_deploy
+  image: lwolf/helm-kubectl-docker:v193_281
+  stage: staging-deploy
+  script:
+    - helm init --client-only
+    - echo "release name = " $CI_PROJECT_NAME
+    - helm  --kube-context=hetzner upgrade --install --namespace=portto $CI_PROJECT_NAME portto-server/src/main/helm/ --set=image.tag=build$CI_PIPELINE_ID --wait --timeout 3600
+  environment:
+      name: staging

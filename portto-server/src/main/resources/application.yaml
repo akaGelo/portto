@@ -5,6 +5,8 @@ sshd:
     min-port: 31000
     max-port:   33000
   idle-timeout-ms: 60000
+  print-stats-interval: 600000
+
 
 
 spring:
@@ -14,3 +16,6 @@ spring:
         enabled: true
       reload:
         enabled: false
+      discovery:
+        catalog-services-watch:
+          enabled: false

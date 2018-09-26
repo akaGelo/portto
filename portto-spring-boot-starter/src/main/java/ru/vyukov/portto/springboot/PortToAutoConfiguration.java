@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.validation.annotation.Validated;
 import ru.vyukov.portto.porttoserver.PortToClient;
 import ru.vyukov.portto.porttoserver.PortToClientConfig;
 import ru.vyukov.portto.porttoserver.PortToClientImpl;
@@ -26,6 +27,7 @@ public class PortToAutoConfiguration {
 
 
     @Bean
+    @Validated
     @ConfigurationProperties("portto")
     public PortToClientConfig portToClientConfig() {
         return new PortToClientConfig();

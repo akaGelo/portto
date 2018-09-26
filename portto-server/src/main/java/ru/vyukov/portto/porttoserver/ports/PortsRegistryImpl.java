@@ -1,6 +1,7 @@
 package ru.vyukov.portto.porttoserver.ports;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.vyukov.portto.porttoserver.ServerConfig;
 import ru.vyukov.portto.porttoserver.ServerConfig.ForwardingConfig;
@@ -48,6 +49,12 @@ public class PortsRegistryImpl implements PortsRegistry {
         Collections.shuffle(allowedPorts);
 
         return allowedPorts;
+    }
+
+
+    @Scheduled(fixedDelayString = "${sshd.print-stats-interval}", initialDelay = 10_000)
+    public void printStats() {
+        log.info("Free ports: {} of {}", getFreePorts(), getTotalPorts());
     }
 
 

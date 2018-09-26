@@ -48,6 +48,9 @@ public class ServerConfig {
 
     private int idleTimeoutMs = 60_000;
 
+    @NotNull
+    private int printStatsInterval = 60_000;
+
 
     public boolean isAllowAnyPassword() {
         return null == authorizedKeysPath && null == authorizedKeys;

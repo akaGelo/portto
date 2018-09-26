@@ -36,6 +36,11 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>ru.vyukov.portto</groupId>
             <artifactId>portto-server</artifactId>
             <scope>test</scope>
@@ -46,6 +51,7 @@
             <version>2.15.0</version>
             <scope>test</scope>
         </dependency>
+
 
     </dependencies>
 

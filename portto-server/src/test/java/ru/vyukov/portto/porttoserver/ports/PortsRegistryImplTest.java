@@ -1,9 +1,15 @@
 package ru.vyukov.portto.porttoserver.ports;
 
 import org.junit.Test;
+import ru.vyukov.portto.porttoserver.PorttoServerApplicationTests;
 import ru.vyukov.portto.porttoserver.ServerConfig;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.List;
+
 import static org.junit.Assert.*;
+import static ru.vyukov.portto.porttoserver.PorttoServerApplicationTests.bindPorts;
 
 /**
  * @author Oleg Vyukov
@@ -11,9 +17,18 @@ import static org.junit.Assert.*;
 public class PortsRegistryImplTest {
 
     @Test(expected = NoPortException.class)
-    public void noPortTest() throws NoPortException {
-        PortsRegistryImpl portsRegistry = new PortsRegistryImpl(testForwardingConfig(80, 90));
-        portsRegistry.pullRandomPort();
+    public void noPortTest() throws IOException {
+        ServerConfig serverConfig = testForwardingConfig(1024, 1054);
+        ServerConfig.ForwardingConfig forwarding = serverConfig.getForwarding();
+
+        List<ServerSocket> busyPorts = bindPorts(forwarding.getMinPort(), forwarding.getMaxPort());
+
+        try {
+            PortsRegistryImpl portsRegistry = new PortsRegistryImpl(serverConfig);
+            portsRegistry.pullRandomPort();
+        }finally {
+            PorttoServerApplicationTests.closeServerSocets(busyPorts);
+        }
     }
 
 
@@ -29,7 +44,7 @@ public class PortsRegistryImplTest {
 
         portsRegistry.retrievePort(port);
         int freePortsAfterTest = portsRegistry.getFreePorts();
-        assertEquals(freePortsBeforeTest,freePortsAfterTest);
+        assertEquals(freePortsBeforeTest, freePortsAfterTest);
 
     }
 

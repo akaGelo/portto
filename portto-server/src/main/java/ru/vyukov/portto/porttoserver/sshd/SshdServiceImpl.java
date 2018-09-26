@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.forward.ForwardingFilterFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
+import org.apache.sshd.common.session.helpers.AbstractSession;
 import org.apache.sshd.server.ServerAuthenticationManager;
 import org.apache.sshd.server.ServerBuilder;
 import org.apache.sshd.server.SshServer;
@@ -51,16 +52,16 @@ public class SshdServiceImpl implements SshdService {
 
 
     @PostConstruct
-    public void init() {
-        log.info(">>>> SSHd listen {}:{}", config.getListenInterface(), config.getListenPort());
-        log.info(">>>> Forwarding range {}-{}", config.getForwarding().getMinPort(), config.getForwarding().getMaxPort());
+    public void init(){
         sshd = ServerBuilder.builder().build();
     }
-
 
     @PreDestroy
     public void destroy() throws IOException {
         if (null != sshd) {
+            for (AbstractSession session : sshd.getActiveSessions()) {
+                session.close();
+            }
             sshd.stop(true);
         }
     }
@@ -89,6 +90,9 @@ public class SshdServiceImpl implements SshdService {
         authConfig();
 
         sshd.start();
+
+        log.info(">>>> SSHd listen {}:{}", config.getListenInterface(), config.getListenPort());
+        log.info(">>>> Forwarding range {}-{}", config.getForwarding().getMinPort(), config.getForwarding().getMaxPort());
     }
 
 

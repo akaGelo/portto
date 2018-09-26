@@ -25,8 +25,8 @@ public class WelcomeBannerServerUserAuthService extends ServerUserAuthService {
         int maxConnections = portsRegistry.getTotalPorts();
         int availableConnections = portsRegistry.getFreePorts();
 
-        StringBuilder builder = new StringBuilder("Welcome to portto server!\n");
-        builder.append("\nSupport authorization: " + authorization);
+        StringBuilder builder = new StringBuilder("\n\nWelcome to portto server!\n");
+        builder.append("\nSupport authorization: ").append(authorization);
         builder.append("\nMaximum connections: ").append(maxConnections);
         builder.append("\nAvailable connections: ").append(availableConnections);
 
