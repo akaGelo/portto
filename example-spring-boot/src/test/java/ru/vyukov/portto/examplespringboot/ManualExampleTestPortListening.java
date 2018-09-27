@@ -11,6 +11,9 @@ import ru.vyukov.portto.springboot.PortTo;
 import ru.vyukov.portto.springboot.annotations.PortToRemoteAddress;
 import ru.vyukov.portto.springboot.annotations.PortToRemotePort;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
+
 @PortTo
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -37,7 +40,8 @@ public class ManualExampleTestPortListening {
 
         String url = "http://" + remoteAddress;
         RestOperations likeBrowserInSeleniumGrid = new RestTemplate();
-//TODO likeBrowserInSeleniumGrid.getRequest()
+        String response = likeBrowserInSeleniumGrid.getForObject(url, String.class);
+        assertThat(response, containsString("From Russia with Love"));
 
     }
 

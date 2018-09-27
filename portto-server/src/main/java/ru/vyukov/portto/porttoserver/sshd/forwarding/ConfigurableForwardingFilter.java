@@ -24,16 +24,12 @@ public class ConfigurableForwardingFilter extends DefaultForwardingFilter {
         this.portsRegistry = portsRegistry;
     }
 
-    @Override
-    public synchronized SshdSocketAddress getForwardedPort(int remotePort) {
-        return super.getForwardedPort(remotePort);
-    }
-
 
     @Override
     public synchronized SshdSocketAddress localPortForwardingRequested(SshdSocketAddress local) throws IOException, NoPortException {
         int port = portsRegistry.pullRandomPort();
-        SshdSocketAddress address = new SshdSocketAddress(local.getHostName(), port);
+        //bind all interfaces
+        SshdSocketAddress address = new SshdSocketAddress("0.0.0.0", port);
         return super.localPortForwardingRequested(address);
     }
 

@@ -3,13 +3,15 @@ package ru.vyukov.portto.porttoserver;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import org.apache.sshd.common.util.io.IoUtils;
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.SocketUtils;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.URL;
+import java.net.*;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,9 +21,16 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Oleg Vyukov
  */
+@RunWith(Parameterized.class)
 public class PortToClientImplTest {
 
     private static final int WEB_MOCK_PORT = SocketUtils.findAvailableTcpPort();
+
+    @Parameterized.Parameters
+    public static Collection<String> data() {
+        return HostNameUtil.getHostAddresses();
+    }
+
 
     @ClassRule
     public static WireMockClassRule wireMockRule = new WireMockClassRule(WEB_MOCK_PORT);
@@ -31,6 +40,12 @@ public class PortToClientImplTest {
     private static int serverSshPort;
 
     private PortToClientImpl portToClient;
+
+    private String testingInterface;
+
+    public PortToClientImplTest(String testingInterface) {
+        this.testingInterface = testingInterface;
+    }
 
     @BeforeClass
     public static void setUpSuite() throws Exception {
@@ -42,7 +57,7 @@ public class PortToClientImplTest {
     @Before
     public void setUpTest() throws Exception {
         PortToClientConfig portToClientConfig = new PortToClientConfig();
-        portToClientConfig.setServersList(Collections.singletonList(new InetSocketAddress("localhost", serverSshPort)));
+        portToClientConfig.setServersList(Collections.singletonList(new InetSocketAddress(testingInterface, serverSshPort)));
 
         portToClient = new PortToClientImpl(portToClientConfig);
 

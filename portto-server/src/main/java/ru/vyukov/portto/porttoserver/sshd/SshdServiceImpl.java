@@ -82,6 +82,7 @@ public class SshdServiceImpl implements SshdService {
 
         sshd.setForwardingFilter(AcceptAllForwardingFilter.INSTANCE);
 
+
         sshd.setKeyPairProvider(new ClassLoadableResourceKeyPairProvider("server_key_pair.pem"));
 
 

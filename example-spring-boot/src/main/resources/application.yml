@@ -1,7 +1,7 @@
 portto:
   servers-list:
-    - unreachable-porto.vyukov.ru
-    - portto.vyukov.ru
+    - unreachable-porto.vyukov.ru:32222
+    - portto.vyukov.ru:32222
   #private-key-path: #{null} #default
   #user-name: portto #default
   #password: qwerty #default
