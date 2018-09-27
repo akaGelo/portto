@@ -1,7 +1,10 @@
 portto:
-  serversList:
-    - "teset1:1212"
-    - "teset2:1212"
+  servers-list:
+    - unreachable-porto.vyukov.ru
+    - portto.vyukov.ru
+  #private-key-path: #{null} #default
+  #user-name: portto #default
+  #password: qwerty #default
 
 
 ---

@@ -35,7 +35,7 @@ public class PortToClientImpl implements PortToClient {
 
     @Override
     public void startForwarding(int port) throws PortToClientException, IllegalStateException {
-        if (!notStarted()) {
+        if (isStarted()) {
             throw new IllegalStateException("Already started");
         }
         connect(port);
@@ -87,7 +87,6 @@ public class PortToClientImpl implements PortToClient {
 
     @Override
     public void stopForwardingAll() throws PortToClientException {
-        isStartedCheck();
         try {
             session.delPortForwardingR(remotePort);
         } catch (JSchException e) {
@@ -121,6 +120,11 @@ public class PortToClientImpl implements PortToClient {
 
     private boolean notStarted() {
         return null == session || !session.isConnected();
+    }
+
+    @Override
+    public boolean isStarted(){
+        return !notStarted();
     }
 
 }

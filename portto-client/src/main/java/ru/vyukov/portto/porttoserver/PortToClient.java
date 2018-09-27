@@ -12,6 +12,7 @@ public interface PortToClient {
 
     String getRemoteAddress();
 
+    boolean isStarted();
 }
 
 

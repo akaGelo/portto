@@ -15,12 +15,16 @@ import java.util.List;
 @Data
 public class PortToClientConfig {
 
+    /**
+     * PortTo servers in host:port format
+     */
     @NotNull
     @NotEmpty
     private List<InetSocketAddress> serversList = Arrays.asList(
             new InetSocketAddress("portto-server", 32222), //local network default host
             new InetSocketAddress("portto.vyukov.ru", 32222) // public sandbox
     );
+
 
     @NotNull
     @NotEmpty
