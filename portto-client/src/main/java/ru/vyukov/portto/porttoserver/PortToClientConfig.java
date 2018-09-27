@@ -38,5 +38,7 @@ public class PortToClientConfig {
      */
     private String privateKeyPath;
 
+    private int socketTimeout = 10_0000;
+
 
 }

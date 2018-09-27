@@ -1,5 +1,6 @@
 portto:
   servers-list:
+    - 192.168.1.113:32222
     - unreachable-porto.vyukov.ru:32222
     - portto.vyukov.ru:32222
   #private-key-path: #{null} #default

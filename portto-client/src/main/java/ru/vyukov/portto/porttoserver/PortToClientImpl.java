@@ -81,6 +81,7 @@ public class PortToClientImpl implements PortToClient {
     private Session startForwarding(InetSocketAddress serverAddress, int port) throws JSchException {
         Session session = sch.getSession(config.getUserName(), serverAddress.getHostString(), serverAddress.getPort());
         session.setUserInfo(new ConfiguredUserInfo(config));
+        session.setTimeout(config.getSocketTimeout());
         session.connect();
         return session;
     }
