@@ -1,0 +1,14 @@
+[[overview]]
+= Описание
+
+====== Зачем
+Боль чуть ниже спины при написание UI тестов
+
+====== Как работает:
+Ssh туннели
+
+include::{snippets}/install/curl-request.adoc[]
+
+include::{snippets}/install/request-parameters.adoc[]
+
+

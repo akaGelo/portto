@@ -1,0 +1,13 @@
+= Сервис вызова официанта
+Oleg Vyukov;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:snippets: ../../../target/generated-snippets
+
+[[overview]]
+= Описание
+
