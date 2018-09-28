@@ -23,13 +23,13 @@ stages:
   - build
   - integration-test
   - staging-deploy
+  - code-coverage
 
 
 maven-build:
   image: twalter/maven-docker
   stage: build
   script:
-    - echo $DOCKER_CONTAINER_IP
     - mvn $MAVEN_CLI_OPTS clean deploy
   cache:
     paths:
@@ -46,3 +46,15 @@ helm-deploy-admin-service: &staging_deploy
     - helm  --kube-context=hetzner upgrade --install --namespace=portto $CI_PROJECT_NAME portto-server/src/main/helm/ --set=image.tag=build$CI_PIPELINE_ID --wait --timeout 3600
   environment:
       name: staging
+
+
+
+maven-code-coverage:
+  image: twalter/maven-docker
+  stage: code-coverage
+  script:
+    - mvn $MAVEN_CLI_OPTS  cobertura:cobertura | grep -v DEBUG
+    - bash <(curl -s https://codecov.io/bash)
+  cache:
+    paths:
+      - .m2/repository/

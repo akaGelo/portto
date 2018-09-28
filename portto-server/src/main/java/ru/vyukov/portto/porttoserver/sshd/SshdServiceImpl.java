@@ -40,7 +40,6 @@ public class SshdServiceImpl implements SshdService {
 
     private final ServerConfig config;
     private final PortsRegistry portsRegistry;
-    private final CommandFactory commandFactory;
     private final ForwardingFilterFactory forwarderFactory;
 
     private final ServerUserAuthServiceFactory serverUserAuthServiceFactory;
@@ -74,7 +73,6 @@ public class SshdServiceImpl implements SshdService {
 
         setProperties(sshd);
 
-        sshd.setCommandFactory(commandFactory);
 
         sshd.setForwarderFactory(forwarderFactory);
 
